@@ -9,24 +9,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.groupsix.mapFood.entities.Motoboy;
-import com.groupsix.mapFood.repositories.MotoboyRepository;
+import com.groupsix.mapFood.service.MotoboyService;
 
 @RestController
 @RequestMapping("/motoboy")
 public class MotoboyController {
 
 	@Autowired
-	private MotoboyRepository motoboyRepository;
-	
-	@GetMapping(value = "/all")
-	public ResponseEntity<List<Motoboy>> listar() {
-		List<Motoboy> motoboys = motoboyRepository.findAll();
-		return ResponseEntity.ok(motoboys);
-	}
+	private MotoboyService motoboyService;
 	
 	@GetMapping(value = "/nearby")
 	public ResponseEntity<List<Motoboy>> listarPorPerto() {
-		List<Motoboy> motoboys = motoboyRepository.findNearby(-30.0283716, -51.13405395);
+		List<Motoboy> motoboys = motoboyService.findNearby(-30.0283716, -51.13405395);
 		
 		return ResponseEntity.ok(motoboys);
 	}
