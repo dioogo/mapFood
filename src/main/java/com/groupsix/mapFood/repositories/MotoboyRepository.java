@@ -16,7 +16,7 @@ public interface MotoboyRepository extends JpaRepository<Motoboy, Integer> {
 			"sin(radians(?1)) * " +
 			"sin(radians(lat )))" +
 			") distance " +
-			"FROM mapfood.motoboy " +
+			"FROM Motoboy motoboy " +
 			"HAVING distance < 5 " +
 			"ORDER BY distance " +
 			"LIMIT 0, 3", 
