@@ -1,7 +1,6 @@
-package com.groupsix.mapFood.repositories;
+package com.groupsix.mapFood.services;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -15,12 +14,17 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.groupsix.mapFood.entities.Motoboy;
+import com.groupsix.mapFood.repositories.MotoboyRepository;
+import com.groupsix.mapFood.service.MotoboyService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class MotoboyRepositoryTest {
+public class MotoboyServiceTest {
 
+	@Autowired
+	private MotoboyService motoboyService;
+	
 	@Autowired
 	private MotoboyRepository motoboyRepository;
 	
@@ -40,15 +44,8 @@ public class MotoboyRepositoryTest {
 	
 	@Test
 	public void testFindMotoboyNearby() {
-		List<Motoboy> motoboys = motoboyRepository.findNearby(-30.000148, -51.198440);
+		List<Motoboy> motoboys = motoboyService.findNearby(-30.000148, -51.198440);
 		
 		assertEquals(1, motoboys.size());
-	}
-	
-	@Test
-	public void testNotFindMotoboyNearby() {
-		List<Motoboy> motoboys = motoboyRepository.findNearby(-29.997987,-51.144880);
-		
-		assertTrue(motoboys.isEmpty());
 	}
 }

@@ -7,7 +7,7 @@ import com.groupsix.mapFood.entities.Motoboy;
 public interface MotoboyService {
 
 	/**
-	 * Provide a list of motoboys nearby given the latitude and longitude
+	 * Provide a list of motoboys nearby 5km, ordered by most close, given the latitude and longitude
 	 * @param lat
 	 * @param lon
 	 * @return List<Motoboy>
