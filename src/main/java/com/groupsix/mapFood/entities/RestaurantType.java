@@ -5,13 +5,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Entity
-public class Motoboy {
+@Entity(name = "restaurant_type")
+@Table(name = "restaurant_type")
+public class RestaurantType {
 
 	private Integer id;
-	private Double lat;
-	private Double lon;
+	private String name;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,26 +25,17 @@ public class Motoboy {
 	}
 
 	@Column
-	public Double getLat() {
-		return lat;
+	public String getName() {
+		return name;
 	}
 
-	public void setLat(Double lat) {
-		this.lat = lat;
-	}
-
-	@Column
-	public Double getLon() {
-		return lon;
-	}
-
-	public void setLon(Double lon) {
-		this.lon = lon;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
 	public String toString() {
-		return "Motoboy [id=" + id + ", lat=" + lat + ", lon=" + lon + "]";
+		return "RestaurantType [id=" + id + ", name=" + name + "]";
 	}
 
 }
