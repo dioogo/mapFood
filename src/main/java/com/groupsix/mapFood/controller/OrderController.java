@@ -19,7 +19,7 @@ public class OrderController {
 	private OrderService orderService;
 	
 	@PostMapping
-	public ResponseEntity<Order> createLibrary(@RequestBody Order order) {
+	public ResponseEntity<Order> createOrder(final @RequestBody Order order) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(order)); 
-}
+	}
 }
