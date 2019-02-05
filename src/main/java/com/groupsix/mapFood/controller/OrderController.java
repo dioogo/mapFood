@@ -1,6 +1,5 @@
 package com.groupsix.mapFood.controller;
 
-import com.groupsix.mapFood.exception.TotalPriceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 
 import com.groupsix.mapFood.pojo.Order;
 import com.groupsix.mapFood.service.OrderService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/orders")

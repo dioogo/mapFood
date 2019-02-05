@@ -41,7 +41,7 @@ public class OrderService {
 		if(customer.getDistanceFrom(restaurant.getLat(), restaurant.getLon()) > 1) {
 			throw new CustomerTooFarException();
 		}
-		
+
 		final List<OrderItemEntity> orderItemsEntities = orderItemService.getOrderItems(order.getOrderItems());
 
 		boolean itemFromAnotherRestaurant = orderItemsEntities.stream()
