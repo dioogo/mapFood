@@ -1,5 +1,6 @@
 package com.groupsix.mapFood.controller;
 
+import com.groupsix.mapFood.exception.TotalPriceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import com.groupsix.mapFood.pojo.Order;
 import com.groupsix.mapFood.service.OrderService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -19,7 +22,11 @@ public class OrderController {
 	private OrderService orderService;
 	
 	@PostMapping
-	public ResponseEntity<Order> createOrder(final @RequestBody Order order) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(order)); 
+	public ResponseEntity<?> createOrder(final @RequestBody Order order) {
+		try {
+			return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(order));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+		}
 	}
 }

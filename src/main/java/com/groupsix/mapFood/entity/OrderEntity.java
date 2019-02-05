@@ -32,7 +32,7 @@ public class OrderEntity {
 	
 	@Column(name = "estimated_time_to_delivery")
 	private Timestamp estimatedTimeToDelivery;
-	
+
 	@Column
 	private Integer total;
 	
@@ -97,4 +97,5 @@ public class OrderEntity {
 	public void setOrderItems(List<OrderItemEntity> orderItems) {
 		this.orderItems = orderItems;
 	}
+
 }

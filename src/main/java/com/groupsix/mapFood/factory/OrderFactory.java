@@ -32,7 +32,6 @@ public class OrderFactory {
 		newOrder.setCustomer(customer);
 		newOrder.setOrderItems(orderItemsEntities);
 		newOrder.setEstimatedTimeToDelivery(new Timestamp(System.currentTimeMillis() + 600000));
-		newOrder.setTotal(order.getTotal());
 		newOrder.setOrderDelivery(orderDeliveryEntity);
 		
 		return newOrder;

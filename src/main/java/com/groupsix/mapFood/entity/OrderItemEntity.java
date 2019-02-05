@@ -24,7 +24,7 @@ public class OrderItemEntity {
 	
 	@Column
 	private String name;
-	
+
 	@Column
 	private Integer total;
 	

@@ -56,4 +56,8 @@ public class CustomerEntity {
 	public void setLon(Double lon) {
 		this.lon = lon;
 	}
+
+	public Double getDistanceFrom(Double lat, Double lon) {
+		return Math.sqrt(Math.pow(this.getLon() - lon, 2) + Math.pow(this.getLat() - lat, 2));
+	}
 }
