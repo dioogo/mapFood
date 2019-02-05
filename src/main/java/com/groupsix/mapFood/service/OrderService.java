@@ -28,14 +28,15 @@ public class OrderService {
 	private OrderFactory orderFactory;
 	
 	public Order createOrder(final Order order) {
-		
+		// BUSCA OS ITENS DO PEDIDO PELO ID
 		final List<OrderItemEntity> orderItemsEntities = orderItemService.getOrderItems(order.getOrderItems());
-		
+		// CRIA A ENTREGA
 		final OrderDeliveryEntity orderDeliveryEntity = orderDeliveryService.getOrderDelivery(order.getCustomerId());
 
 		final OrderEntity newOrder = orderFactory.fromDTO(order, orderItemsEntities, orderDeliveryEntity);
-		orderRepository.save(newOrder);
-		
+		//orderRepository.save(newOrder);
+		System.out.println(newOrder.getRestaurant().toString());
+		System.out.println(newOrder.getOrderDelivery().getMotoboy().toString());
 		return order;
 	}
 }

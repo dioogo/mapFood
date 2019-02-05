@@ -17,30 +17,30 @@ public class RestaurantEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@Column
 	private String hash;
-	
+
 	@Column
 	private Double lat;
-	
+
 	@Column
 	private Double lon;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "city_id", nullable = false)
 	private CityEntity city;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "restaurant_type_id", nullable = false)
 	private RestaurantTypeEntity restaurantType;
-	
+
 	@OneToMany(mappedBy = "restaurant", targetEntity = OrderEntity.class)
 	private List<OrderEntity> orders;
-	
+
 	@OneToMany(mappedBy = "restaurant", targetEntity = ProductEntity.class)
 	private List<ProductEntity> products;
-	
+
 	@OneToMany(mappedBy = "restaurant", targetEntity = ProductClassificationEntity.class)
 	private List<ProductClassificationEntity> productClassifications;
 
@@ -115,4 +115,12 @@ public class RestaurantEntity {
 	public void setOrders(List<OrderEntity> orders) {
 		this.orders = orders;
 	}
+
+	@Override
+	public String toString() {
+		return "RestaurantEntity [id=" + id + ", hash=" + hash + ", lat=" + lat + ", lon=" + lon + ", city=" + city
+				+ ", restaurantType=" + restaurantType + ", orders=" + orders + ", products=" + products
+				+ ", productClassifications=" + productClassifications + "]";
+	}
+
 }

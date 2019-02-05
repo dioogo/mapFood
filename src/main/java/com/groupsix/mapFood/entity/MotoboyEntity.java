@@ -15,13 +15,13 @@ public class MotoboyEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@Column
 	private Double lat;
-	
+
 	@Column
 	private Double lon;
-	
+
 	@OneToMany(mappedBy = "motoboy", targetEntity = OrderDeliveryEntity.class)
 	private List<OrderDeliveryEntity> orderDeliveries;
 
@@ -56,4 +56,11 @@ public class MotoboyEntity {
 	public void setLon(Double lon) {
 		this.lon = lon;
 	}
+
+	@Override
+	public String toString() {
+		return "MotoboyEntity [id=" + id + ", lat=" + lat + ", lon=" + lon + ", orderDeliveries=" + orderDeliveries
+				+ "]";
+	}
+
 }

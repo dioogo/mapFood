@@ -1,5 +1,7 @@
 package com.groupsix.mapFood.pojo;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 public class OrderItem {
 	
 	private Integer id;
@@ -18,6 +20,7 @@ public class OrderItem {
 		this.id = id;
 	}
 	
+	@JsonAlias("product_id")
 	public Integer getProductId() {
 		return productId;
 	}
@@ -42,6 +45,7 @@ public class OrderItem {
 		this.name = name;
 	}
 	
+	@JsonAlias("item_price")
 	public Integer getItemPrice() {
 		return itemPrice;
 	}
@@ -58,6 +62,7 @@ public class OrderItem {
 		this.total = total;
 	}
 
+	@JsonAlias("order_id")
 	public Integer getOrderId() {
 		return orderId;
 	}

@@ -2,6 +2,9 @@ package com.groupsix.mapFood.pojo;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Order {
 
 	private Integer id;
@@ -18,6 +21,7 @@ public class Order {
 		this.id = id;
 	}
 	
+	@JsonAlias("customer_id")
 	public Integer getCustomerId() {
 		return customerId;
 	}
@@ -26,6 +30,7 @@ public class Order {
 		this.customerId = customerId;
 	}
 	
+	@JsonAlias("restaurant_id")
 	public Integer getRestaurantId() {
 		return restaurantId;
 	}
@@ -42,6 +47,7 @@ public class Order {
 		this.total = total;
 	}
 
+	@JsonProperty("order_items")
 	public List<OrderItem> getOrderItems() {
 		return orderItems;
 	}
