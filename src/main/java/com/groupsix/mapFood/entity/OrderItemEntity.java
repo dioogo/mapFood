@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity(name = "order_item")
 public class OrderItemEntity {
@@ -20,12 +21,14 @@ public class OrderItemEntity {
 	private OrderEntity order;
 	
 	@Column
+	@NotNull
 	private Integer quantity;
 	
 	@Column
 	private String name;
 
 	@Column
+	@NotNull
 	private Integer total;
 	
 	@Column(name = "item_price")
@@ -33,6 +36,7 @@ public class OrderItemEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "product_id", nullable = false)
+	@NotNull
 	private ProductEntity product;
 
 	public Integer getId() {

@@ -17,8 +17,6 @@ import com.groupsix.mapFood.repository.OrderRepository;
 @Service
 public class OrderService {
 
-	private static Double MAX_DISTANCE = 0.5;
-
 	@Autowired
 	private OrderRepository orderRepository;
 	
@@ -51,7 +49,7 @@ public class OrderService {
 		CustomerEntity customer = customerService.getCustomer(order.getCustomerId());
 		RestaurantEntity restaurant = restaurantService.getRestaurant(order.getRestaurantId());
 
-		if(customer.getDistanceFrom(restaurant.getLat(), restaurant.getLon()) > MAX_DISTANCE) {
+		if(customer.isNotInTheSameCity(restaurant.getLat(), restaurant.getLon())) {
 			throw new CustomerTooFarException();
 		}
 	}
