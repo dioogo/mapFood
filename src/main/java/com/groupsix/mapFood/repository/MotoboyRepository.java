@@ -9,18 +9,18 @@ import com.groupsix.mapFood.entity.MotoboyEntity;
 
 public interface MotoboyRepository extends JpaRepository<MotoboyEntity, Integer> {
 
-	@Query(value = "select *, (" +
-			"6371 * acos(cos(radians(?1)) * " + 
-			"cos(radians(lat)) * " +
-			"cos(radians(lon) - radians(?2)) + " +
-			"sin(radians(?1)) * " +
-			"sin(radians(lat )))" +
-			") distance " +
-			"FROM Motoboy motoboy " +
-			"HAVING distance < 5 " +
-			"ORDER BY distance " +
-			"LIMIT 0, 3", 
+	/*
+	 * @Query(value = "select *, (" + "6371 * acos(cos(radians(?1)) * " +
+	 * "cos(radians(lat)) * " + "cos(radians(lon) - radians(?2)) + " +
+	 * "sin(radians(?1)) * " + "sin(radians(lat )))" + ") distance " +
+	 * "FROM Motoboy motoboy " + "HAVING distance < ?3 " + "ORDER BY distance " +
+	 * "LIMIT 0, 3", nativeQuery = true)
+	 */
+	@Query(value = "SELECT lat, lon, SQRT(" + 
+			"    POW(69.1 * (lat - ?1), 2) + " + 
+			"    POW(69.1 * (?2 - lon) * COS(lat / 57.3), 2)) AS distance " + 
+			"    FROM Restaurant restaurant HAVING distance < ?3 ORDER BY distance",
 			nativeQuery = true)
-	List<MotoboyEntity> findNearby(Double lat, Double lon);
+	List<MotoboyEntity> findNearby(Double lat, Double lon, Integer km);
 
 }

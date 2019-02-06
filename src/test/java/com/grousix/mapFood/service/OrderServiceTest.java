@@ -56,7 +56,7 @@ public class OrderServiceTest {
 		final OrderDeliveryEntity orderDeliveryEntity = new OrderDeliveryEntity();
 		
 		when(orderItemService.getOrderItems(orderItems)).thenReturn(orderItemsEntities);
-		when(orderDeliveryService.getOrderDelivery(5)).thenReturn(orderDeliveryEntity);
+		//when(orderDeliveryService.getOrderDelivery(5)).thenReturn(orderDeliveryEntity);
 		
 		final OrderEntity newOrder = new OrderEntity();
 		when(orderFactory.fromDTO(order, orderItemsEntities, orderDeliveryEntity)).thenReturn(newOrder);
