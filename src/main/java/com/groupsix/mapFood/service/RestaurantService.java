@@ -1,5 +1,7 @@
 package com.groupsix.mapFood.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +14,8 @@ public class RestaurantService {
 	@Autowired
 	private RestaurantRepository restaurantRepository;
 	
-	public RestaurantEntity findById(Integer id) {
-		return restaurantRepository.findById(id).get();
+	public Optional<RestaurantEntity> findById(Integer id) {
+		return restaurantRepository.findById(id);
 	}
 	
 }

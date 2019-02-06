@@ -1,8 +1,8 @@
 package com.grousix.mapFood.service;
 
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.groupsix.mapFood.entity.OrderDeliveryEntity;
 import com.groupsix.mapFood.entity.OrderEntity;
 import com.groupsix.mapFood.entity.OrderItemEntity;
-import com.groupsix.mapFood.factory.OrderFactory;
 import com.groupsix.mapFood.pojo.Order;
 import com.groupsix.mapFood.pojo.OrderItem;
 import com.groupsix.mapFood.repository.OrderRepository;
@@ -35,9 +34,6 @@ public class OrderServiceTest {
 	
 	@Mock
 	private OrderDeliveryService orderDeliveryService;
-	
-	@Mock
-	private OrderFactory orderFactory;
 	
 	@InjectMocks
 	private OrderService service;
@@ -59,7 +55,26 @@ public class OrderServiceTest {
 		//when(orderDeliveryService.getOrderDelivery(5)).thenReturn(orderDeliveryEntity);
 		
 		final OrderEntity newOrder = new OrderEntity();
-		when(orderFactory.fromDTO(order, orderItemsEntities, orderDeliveryEntity)).thenReturn(newOrder);
+		//when(orderFactory.fromDTO(order, orderItemsEntities, orderDeliveryEntity)).thenReturn(newOrder);
+		
+		service.createOrder(order);
+		
+		verify(orderRepository, times(1)).save(newOrder);
+	}
+	
+	@Test
+	public void testCreateOrder2() {
+		
+		Order order = new Order();
+		order.setCustomerId(5);
+		
+		order.setOrderItems(new ArrayList<>());
+		
+		List<OrderItemEntity> orderItemsEntities = new ArrayList<>();
+		
+		when(orderItemService.getOrderItems(order.getOrderItems())).thenReturn(orderItemsEntities);
+		
+		OrderEntity newOrder = new OrderEntity();
 		
 		service.createOrder(order);
 		

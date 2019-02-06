@@ -10,16 +10,20 @@ import com.groupsix.mapFood.entity.OrderItemEntity;
 import com.groupsix.mapFood.entity.ProductEntity;
 import com.groupsix.mapFood.factory.OrderItemFactory;
 import com.groupsix.mapFood.pojo.OrderItem;
+import com.groupsix.mapFood.repository.OrderItemRepository;
 import com.groupsix.mapFood.repository.ProductRepository;
 
 @Service
 public class OrderItemService {
 	
 	@Autowired
-	private ProductRepository productRepository;
+	private OrderItemRepository orderItemRepository;
 	
 	@Autowired
 	private OrderItemFactory orderItemFactory;
+	
+	@Autowired
+	private ProductRepository productRepository;
 	
 	public List<OrderItemEntity> getOrderItems(final List<OrderItem> orderItems) {
 
@@ -35,6 +39,10 @@ public class OrderItemService {
 		});
 		
 		return orderItemsEntities;
+	}
+
+	public List<OrderItemEntity> findByIdIn(List<Integer> ids) {
+		return orderItemRepository.findByIdIn(ids);
 	}
 
 }

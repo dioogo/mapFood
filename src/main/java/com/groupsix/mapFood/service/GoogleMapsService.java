@@ -27,14 +27,21 @@ public class GoogleMapsService {
 				.awaitIgnoreError();
 	}
 	
-	public String timeToReach(LatLng start, LatLng end) {
+	/**
+	 * Return the time in seconds driving from point A to B
+	 * @param start
+	 * @param end
+	 * @return Long seconds
+	 */
+	public Long timeToReach(LatLng start, LatLng end) {
 		DirectionsResult result = getDirections(start, end);
 		
-		String distance = "";
+		Long distance = 0L;
 		for (DirectionsLeg leg : result.routes[0].legs) {
 			System.out.println(leg.distance.humanReadable);
 			System.out.println(leg.duration.humanReadable);
-			distance = leg.duration.humanReadable;
+			System.out.println("Resultado      " + leg.duration.inSeconds);
+			distance = leg.duration.inSeconds;
 		}
 		return distance;
 	}

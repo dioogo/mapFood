@@ -1,24 +1,23 @@
 package com.groupsix.mapFood.service;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.maps.model.LatLng;
-import com.groupsix.mapFood.entity.MotoboyEntity;
-import com.groupsix.mapFood.entity.OrderDeliveryEntity;
 import com.groupsix.mapFood.entity.OrderEntity;
 import com.groupsix.mapFood.entity.OrderItemEntity;
-import com.groupsix.mapFood.factory.OrderFactory;
 import com.groupsix.mapFood.pojo.Order;
+import com.groupsix.mapFood.pojo.OrderItem;
 import com.groupsix.mapFood.repository.OrderRepository;
 
 @Service
 public class OrderService {
 
+	@Autowired
+	private CustomerService customerService;
+	
 	@Autowired
 	private OrderItemService orderItemService;
 	
@@ -26,46 +25,54 @@ public class OrderService {
 	private OrderDeliveryService orderDeliveryService;
 	
 	@Autowired
-	private MotoboyService motoboyService;
-	
-	@Autowired
-	private OrderFactory orderFactory;
-	
-	@Autowired
 	private OrderRepository orderRepository;
 	
 	@Autowired
 	private RestaurantService restaurantService;
 	
-	@Autowired
-	private GoogleMapsService googleMapsService;
-	
+	/**
+	 * Create a order
+	 * @param order
+	 * @return Order
+	 */
 	public Order createOrder(final Order order) {
-		// BUSCA OS ITENS DO PEDIDO PELO ID
-		final List<OrderItemEntity> orderItemsEntities = orderItemService.getOrderItems(order.getOrderItems());
-		// CRIA A ENTREGA
-		final OrderDeliveryEntity orderDeliveryEntity = orderDeliveryService.getOrderDelivery(order);
-
-		final OrderEntity newOrder = orderFactory.fromDTO(order, orderItemsEntities, orderDeliveryEntity);
+		OrderEntity orderEntity = convertToEntity(order);
 		
-		orderDeliveryEntity.getOrder().setRestaurant(restaurantService.findById(order.getRestaurantId()));
+		orderEntity.setOrderDelivery(orderDeliveryService.create(orderEntity));
 		
-		MotoboyEntity motoboy= motoboyService.findNearby(
-				orderDeliveryEntity.getOrder().getRestaurant().getLat(), 
-				orderDeliveryEntity.getOrder().getRestaurant().getLon()).get(0);
+		// calcular horarios
 		
-		orderDeliveryEntity.setMotoboy(motoboy);
 		
-		String time = googleMapsService.timeToReach(
-				getLatLon(motoboy.getLat(), motoboy.getLon()), 
-				getLatLon(orderDeliveryEntity.getOrder().getRestaurant().getLat(), 
-						orderDeliveryEntity.getOrder().getRestaurant().getLon()));
 		
-		orderRepository.save(newOrder);
+		orderRepository.save(orderEntity);
 		return order;
 	}
 	
-	private LatLng getLatLon(Double lat, Double lon) {
-		return new LatLng(lat, lon);
+	/**
+	 * Convert a Order in OrderEntity
+	 * @param order
+	 * @return OrderEntity
+	 */
+	private OrderEntity convertToEntity(Order order) {
+		OrderEntity entity = new OrderEntity();
+		entity.setId(order.getId());
+		entity.setCustomer(customerService.findById(order.getCustomerId()).get());
+		entity.setOrderItems(getOrdemItems(order));
+		entity.setRestaurant(restaurantService.findById(order.getRestaurantId()).get());
+		entity.setTotal(order.getTotal());
+		return entity;
 	}
+
+	/**
+	 * Return a list o orderItems given a order
+	 * @param order
+	 * @return List<OrderItemEntity>
+	 */
+	private List<OrderItemEntity> getOrdemItems(Order order) {
+		return orderItemService.findByIdIn(
+				order.getOrderItems().stream()
+					.map(OrderItem::getId)
+					.collect(Collectors.toList()));
+	}
+
 }
