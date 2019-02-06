@@ -5,7 +5,7 @@ CREATE TABLE `mapfood`.`product_classification` (
 
 ALTER TABLE `mapfood`.`product_classification` 
 ADD COLUMN `restaurant_id` INT NOT NULL AFTER `name`,
-ADD INDEX `fk_product_classification_1_idx` (`restaurant_id` ASC) VISIBLE;
+ADD INDEX `fk_product_classification_1_idx` (`restaurant_id` ASC);
 ;
 ALTER TABLE `mapfood`.`product_classification` 
 ADD CONSTRAINT `fk_product_classification_1`

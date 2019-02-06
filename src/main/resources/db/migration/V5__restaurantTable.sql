@@ -6,7 +6,7 @@ CREATE TABLE `mapfood`.`restaurant` (
   `lon` DOUBLE NOT NULL,
   `description` VARCHAR(500) NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_restaurant_1_idx` (`city_id` ASC) VISIBLE,
+  INDEX `fk_restaurant_1_idx` (`city_id` ASC),
   CONSTRAINT `fk_restaurant_1`
     FOREIGN KEY (`city_id`)
     REFERENCES `mapfood`.`city` (`id`)
@@ -15,7 +15,7 @@ CREATE TABLE `mapfood`.`restaurant` (
 
 ALTER TABLE `mapfood`.`restaurant` 
 CHANGE COLUMN `description` `restaurant_type_id` INT NOT NULL ,
-ADD INDEX `fk_restaurant_2_idx` (`restaurant_type_id` ASC) VISIBLE;
+ADD INDEX `fk_restaurant_2_idx` (`restaurant_type_id` ASC);
 ;
 ALTER TABLE `mapfood`.`restaurant` 
 ADD CONSTRAINT `fk_restaurant_2`

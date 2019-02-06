@@ -14,7 +14,7 @@ public class MotoboyService {
 	@Autowired
 	private MotoboyRepository motoboyRepository;
 	
-	public List<MotoboyEntity> findNearby(Double lat, Double lon, Integer km) {
-		return motoboyRepository.findNearby(lat, lon, km);
+	public List<MotoboyEntity> findNearby(Double lat, Double lon) {
+		return motoboyRepository.findNeaby(lat, lon);
 	}
 }

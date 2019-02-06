@@ -6,8 +6,8 @@ CREATE TABLE `mapfood`.`product` (
   `classification_id` INT NOT NULL,
   `price` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_product_1_idx` (`restaurant_id` ASC) VISIBLE,
-  INDEX `fk_product_2_idx` (`classification_id` ASC) VISIBLE,
+  INDEX `fk_product_1_idx` (`restaurant_id` ASC),
+  INDEX `fk_product_2_idx` (`classification_id` ASC),
   CONSTRAINT `fk_product_1`
     FOREIGN KEY (`restaurant_id`)
     REFERENCES `mapfood`.`restaurant` (`id`)

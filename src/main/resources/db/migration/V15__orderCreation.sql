@@ -7,8 +7,8 @@ CREATE TABLE `mapfood`.`order` (
   PRIMARY KEY (`id`));
 
 ALTER TABLE `mapfood`.`order` 
-ADD INDEX `fk_order_1_idx` (`customer_id` ASC) VISIBLE,
-ADD INDEX `fk_order_2_idx` (`restaurant_id` ASC) VISIBLE;
+ADD INDEX `fk_order_1_idx` (`customer_id` ASC),
+ADD INDEX `fk_order_2_idx` (`restaurant_id` ASC);
 ;
 ALTER TABLE `mapfood`.`order` 
 ADD CONSTRAINT `fk_order_1`
@@ -32,8 +32,8 @@ CREATE TABLE `mapfood`.`order_item` (
   `total` INT NOT NULL,
   `item_price` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_order_item_1_idx` (`order_id` ASC) VISIBLE,
-  INDEX `fk_order_item_2_idx` (`product_id` ASC) VISIBLE,
+  INDEX `fk_order_item_1_idx` (`order_id` ASC),
+  INDEX `fk_order_item_2_idx` (`product_id` ASC),
   CONSTRAINT `fk_order_item_1`
     FOREIGN KEY (`order_id`)
     REFERENCES `mapfood`.`order` (`id`)
@@ -53,8 +53,8 @@ CREATE TABLE `mapfood`.`order_delivery` (
   `motoboy_id` INT NULL DEFAULT NULL,
   `estimated_time_to_restaurant` TIMESTAMP NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_order_delivery_1_idx` (`order_id` ASC) VISIBLE,
-  INDEX `fk_order_delivery_2_idx` (`motoboy_id` ASC) VISIBLE,
+  INDEX `fk_order_delivery_1_idx` (`order_id` ASC),
+  INDEX `fk_order_delivery_2_idx` (`motoboy_id` ASC),
   CONSTRAINT `fk_order_delivery_1`
     FOREIGN KEY (`order_id`)
     REFERENCES `mapfood`.`order` (`id`)
