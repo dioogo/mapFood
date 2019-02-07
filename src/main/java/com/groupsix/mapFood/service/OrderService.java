@@ -1,7 +1,6 @@
 package com.groupsix.mapFood.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.groupsix.mapFood.entity.OrderEntity;
 import com.groupsix.mapFood.entity.OrderItemEntity;
 import com.groupsix.mapFood.pojo.Order;
-import com.groupsix.mapFood.pojo.OrderItem;
 import com.groupsix.mapFood.repository.OrderRepository;
 
 @Service
@@ -30,29 +28,17 @@ public class OrderService {
 	@Autowired
 	private RestaurantService restaurantService;
 	
-	/**
-	 * Create a order
-	 * @param order
-	 * @return Order
-	 */
 	public Order createOrder(final Order order) {
 		OrderEntity orderEntity = convertToEntity(order);
 		
 		orderEntity.setOrderDelivery(orderDeliveryService.create(orderEntity));
 		
-		// calcular horarios
-		
-		
+		// TODO calcular horarios
 		
 		orderRepository.save(orderEntity);
 		return order;
 	}
 	
-	/**
-	 * Convert a Order in OrderEntity
-	 * @param order
-	 * @return OrderEntity
-	 */
 	private OrderEntity convertToEntity(Order order) {
 		OrderEntity entity = new OrderEntity();
 		entity.setId(order.getId());
@@ -63,16 +49,8 @@ public class OrderService {
 		return entity;
 	}
 
-	/**
-	 * Return a list o orderItems given a order
-	 * @param order
-	 * @return List<OrderItemEntity>
-	 */
 	private List<OrderItemEntity> getOrdemItems(Order order) {
-		return orderItemService.findByIdIn(
-				order.getOrderItems().stream()
-					.map(OrderItem::getId)
-					.collect(Collectors.toList()));
+		return orderItemService.getOrderItems(order.getOrderItems());
 	}
 
 }

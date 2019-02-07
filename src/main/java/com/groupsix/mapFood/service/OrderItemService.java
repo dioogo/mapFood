@@ -10,14 +10,10 @@ import com.groupsix.mapFood.entity.OrderItemEntity;
 import com.groupsix.mapFood.entity.ProductEntity;
 import com.groupsix.mapFood.factory.OrderItemFactory;
 import com.groupsix.mapFood.pojo.OrderItem;
-import com.groupsix.mapFood.repository.OrderItemRepository;
 import com.groupsix.mapFood.repository.ProductRepository;
 
 @Service
 public class OrderItemService {
-	
-	@Autowired
-	private OrderItemRepository orderItemRepository;
 	
 	@Autowired
 	private OrderItemFactory orderItemFactory;
@@ -27,7 +23,7 @@ public class OrderItemService {
 	
 	public List<OrderItemEntity> getOrderItems(final List<OrderItem> orderItems) {
 
-		final List<OrderItemEntity> orderItemsEntities = new ArrayList<>();
+		List<OrderItemEntity> orderItemsEntities = new ArrayList<>();
 		
 		orderItems.stream().forEach(orderItem -> {
 			
@@ -39,10 +35,6 @@ public class OrderItemService {
 		});
 		
 		return orderItemsEntities;
-	}
-
-	public List<OrderItemEntity> findByIdIn(List<Integer> ids) {
-		return orderItemRepository.findByIdIn(ids);
 	}
 
 }

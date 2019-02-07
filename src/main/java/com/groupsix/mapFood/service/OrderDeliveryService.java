@@ -19,11 +19,6 @@ public class OrderDeliveryService {
 	@Autowired
 	private GoogleMapsService googleMapsService;
 
-	/**
-	 * Create the OrderDeliveryEntity given the OrderEntity
-	 * @param orderEntity
-	 * @return OrderDeliveryEntity
-	 */
 	public OrderDeliveryEntity create(OrderEntity orderEntity) {
 		OrderDeliveryEntity orderDeliveryEntity = new OrderDeliveryEntity();
 		

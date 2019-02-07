@@ -15,6 +15,6 @@ public class MotoboyService {
 	private MotoboyRepository motoboyRepository;
 	
 	public List<MotoboyEntity> findNearby(Double lat, Double lon) {
-		return motoboyRepository.findNeaby(lat, lon);
+		return motoboyRepository.findNearby(lat, lon);
 	}
 }
