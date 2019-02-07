@@ -5,19 +5,18 @@ import org.springframework.stereotype.Service;
 
 import com.groupsix.mapFood.entity.CustomerEntity;
 import com.groupsix.mapFood.entity.OrderDeliveryEntity;
-import com.groupsix.mapFood.repository.CustomerRepository;
 
 @Service
 public class OrderDeliveryService {
 
 	@Autowired
-	private CustomerRepository customerRepository;
-	
+	private CustomerService customerService;
+
 	public OrderDeliveryEntity getOrderDelivery(final Integer customerId) {
 		
 		final OrderDeliveryEntity orderDeliveryEntity = new OrderDeliveryEntity();
 		
-		final CustomerEntity customer = customerRepository.getOne(customerId);
+		final CustomerEntity customer = customerService.getCustomer(customerId);
 		orderDeliveryEntity.setDestinationLat(customer.getLat());
 		orderDeliveryEntity.setDestinationLon(customer.getLon());
 		
