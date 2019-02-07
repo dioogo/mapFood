@@ -30,17 +30,19 @@ public class OrderService {
 	@Autowired
 	private OrderFactory orderFactory;
 
+	@Autowired
+	private OrderValidation orderValidation;
+
 	public Order createOrder(final Order order)
 			throws TotalPriceException, DiferentRestaurantException, CustomerTooFarException, ItemsPriceException {
 
-		OrderValidation orderValidation = new OrderValidation(order);
-		orderValidation.verifyTotalOrder();
-		orderValidation.verifyCustomerAndRestaurantDistance();
+		orderValidation.verifyTotalOrder(order);
+		orderValidation.verifyCustomerAndRestaurantDistance(order);
 
 		final List<OrderItemEntity> orderItemsEntities = orderItemService.getOrderItems(order.getOrderItems());
 
 		orderValidation.verifyPricesFromItems(orderItemsEntities);
-		orderValidation.verifyItemsFromSameRestaurant(orderItemsEntities);
+		orderValidation.verifyItemsFromSameRestaurant(orderItemsEntities, order);
 
 		final OrderDeliveryEntity orderDeliveryEntity = orderDeliveryService.getOrderDelivery(order.getCustomerId());
 

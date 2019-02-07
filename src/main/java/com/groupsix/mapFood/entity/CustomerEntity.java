@@ -12,10 +12,6 @@ import javax.persistence.OneToMany;
 @Entity(name = "customer")
 public class CustomerEntity {
 
-	// Usado no cálculo de distância entre coordenadas,
-	// uma coordenada equivale a 111Km, então 0.5 ~= 56Km
-	private static Double MAX_DISTANCE = 0.5;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -59,11 +55,5 @@ public class CustomerEntity {
 
 	public void setLon(Double lon) {
 		this.lon = lon;
-	}
-
-	public boolean isNotInTheSameCity(Double lat, Double lon) {
-
-		 return Math.sqrt(Math.pow(this.getLon() - lon, 2) +
-				Math.pow(this.getLat() - lat, 2)) > MAX_DISTANCE;
 	}
 }

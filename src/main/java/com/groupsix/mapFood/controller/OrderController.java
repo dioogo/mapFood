@@ -25,7 +25,7 @@ public class OrderController {
 	public ResponseEntity<?> createOrder(final @RequestBody @Valid Order order, BindingResult bindingResult) {
 
 		if (bindingResult.hasErrors()) {
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(bindingResult.getModel());
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(bindingResult.getFieldErrors());
 		}
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(order));

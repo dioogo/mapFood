@@ -11,10 +11,16 @@ import com.groupsix.mapFood.pojo.Order;
 import com.groupsix.mapFood.service.CustomerService;
 import com.groupsix.mapFood.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class OrderValidation {
+
+    // Usado no cálculo de distância entre coordenadas,
+    // uma coordenada equivale a 111Km, então 0.5 ~= 56Km
+    private static Double MAX_DISTANCE = 0.5;
 
     @Autowired
     private CustomerService customerService;
@@ -22,13 +28,9 @@ public class OrderValidation {
     @Autowired
     private RestaurantService restaurantService;
 
-    private Order order;
+    public OrderValidation() {}
 
-    public OrderValidation(Order order) {
-        this.order = order;
-    }
-
-    public void verifyTotalOrder()
+    public void verifyTotalOrder(Order order)
             throws TotalPriceException {
 
         boolean totalIsInvalid = !order.getTotal()
@@ -41,13 +43,17 @@ public class OrderValidation {
         }
     }
 
-    public void verifyCustomerAndRestaurantDistance()
+    public void verifyCustomerAndRestaurantDistance(Order order)
             throws CustomerTooFarException {
 
         CustomerEntity customer = customerService.getCustomer(order.getCustomerId());
         RestaurantEntity restaurant = restaurantService.getRestaurant(order.getRestaurantId());
 
-        if(customer.isNotInTheSameCity(restaurant.getLat(), restaurant.getLon())) {
+        Double distanceFromCustomerToRestaurant = Math.sqrt(
+                Math.pow(customer.getLon() - restaurant.getLon(), 2) +
+                Math.pow(customer.getLat() - restaurant.getLat(), 2));
+
+        if(distanceFromCustomerToRestaurant > MAX_DISTANCE) {
             throw new CustomerTooFarException();
         }
     }
@@ -63,7 +69,7 @@ public class OrderValidation {
         }
     }
 
-    public void verifyItemsFromSameRestaurant(List<OrderItemEntity> orderItemsEntities)
+    public void verifyItemsFromSameRestaurant(List<OrderItemEntity> orderItemsEntities, Order order)
             throws DiferentRestaurantException {
 
         boolean itemFromAnotherRestaurant = orderItemsEntities.stream()

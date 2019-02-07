@@ -21,7 +21,6 @@ public class OrderItemEntity {
 	private OrderEntity order;
 	
 	@Column
-	@NotNull
 	private Integer quantity;
 	
 	@Column

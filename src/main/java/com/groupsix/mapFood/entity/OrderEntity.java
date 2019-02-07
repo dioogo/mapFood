@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.NotNull;
 
 @Entity(name = "`order`")
 public class OrderEntity {
@@ -25,23 +24,19 @@ public class OrderEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "customer_id", nullable = false)
-	@NotNull
 	private CustomerEntity customer;
 	
 	@ManyToOne
 	@JoinColumn(name = "restaurant_id", nullable = false)
-	@NotNull
 	private RestaurantEntity restaurant;
 	
 	@Column(name = "estimated_time_to_delivery")
 	private Timestamp estimatedTimeToDelivery;
 
 	@Column
-	@NotNull
 	private Integer total;
 	
 	@OneToMany(mappedBy = "order", targetEntity = OrderItemEntity.class, cascade = CascadeType.ALL)
-	@NotNull
 	private List<OrderItemEntity> orderItems;
 	
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "order")
