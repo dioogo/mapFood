@@ -7,6 +7,7 @@ import com.groupsix.mapFood.exception.CustomerTooFarException;
 import com.groupsix.mapFood.exception.DiferentRestaurantException;
 import com.groupsix.mapFood.exception.ItemsPriceException;
 import com.groupsix.mapFood.exception.TotalPriceException;
+import com.groupsix.mapFood.validation.OrderValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,72 +26,21 @@ public class OrderService {
 	
 	@Autowired
 	private OrderDeliveryService orderDeliveryService;
-
-	@Autowired
-	private CustomerService customerService;
-
-	@Autowired
-	private RestaurantService restaurantService;
 	
 	@Autowired
 	private OrderFactory orderFactory;
 
-	private void verifyTotalOrder(Order order)
-			throws TotalPriceException {
-
-		if(order.totalIsInvalid()) {
-			throw new TotalPriceException();
-		}
-	}
-
-	private void verifyCustomerAndRestaurantDistance(Order order)
-			throws CustomerTooFarException {
-
-		CustomerEntity customer = customerService.getCustomer(order.getCustomerId());
-		RestaurantEntity restaurant = restaurantService.getRestaurant(order.getRestaurantId());
-
-		if(customer.isNotInTheSameCity(restaurant.getLat(), restaurant.getLon())) {
-			throw new CustomerTooFarException();
-		}
-	}
-
-	private void verifyPricesFromItems(List<OrderItemEntity> orderItemsEntities)
-			throws ItemsPriceException {
-
-		boolean itemWithWrongPrice = orderItemsEntities.stream()
-				.anyMatch(i -> !i.getTotal().equals(i.getProduct().getPrice() * i.getQuantity()));
-
-		if(itemWithWrongPrice) {
-			throw new ItemsPriceException();
-		}
-	}
-
-	private void verifyProductsFromSameRestaurant(
-			List<OrderItemEntity> orderItemsEntities,
-			Order order)
-			throws DiferentRestaurantException {
-
-		boolean itemFromAnotherRestaurant = orderItemsEntities.stream()
-				.anyMatch(i -> !i.getProduct()
-						.getRestaurant()
-						.getId()
-						.equals(order.getRestaurantId()));
-
-		if(itemFromAnotherRestaurant) {
-			throw new DiferentRestaurantException();
-		}
-	}
-
 	public Order createOrder(final Order order)
 			throws TotalPriceException, DiferentRestaurantException, CustomerTooFarException, ItemsPriceException {
 
-		verifyTotalOrder(order);
-		verifyCustomerAndRestaurantDistance(order);
+		OrderValidation orderValidation = new OrderValidation(order);
+		orderValidation.verifyTotalOrder();
+		orderValidation.verifyCustomerAndRestaurantDistance();
 
 		final List<OrderItemEntity> orderItemsEntities = orderItemService.getOrderItems(order.getOrderItems());
 
-		verifyPricesFromItems(orderItemsEntities);
-		verifyProductsFromSameRestaurant(orderItemsEntities, order);
+		orderValidation.verifyPricesFromItems(orderItemsEntities);
+		orderValidation.verifyItemsFromSameRestaurant(orderItemsEntities);
 
 		final OrderDeliveryEntity orderDeliveryEntity = orderDeliveryService.getOrderDelivery(order.getCustomerId());
 

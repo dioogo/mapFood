@@ -49,11 +49,4 @@ public class Order {
 	public void setOrderItems(List<OrderItem> orderItems) {
 		this.orderItems = orderItems;
 	}
-
-	public boolean totalIsInvalid() {
-		return !this.getTotal()
-				.equals(this.getOrderItems().stream()
-						.mapToInt(i -> i.getTotal())
-						.sum());
-	}
 }
