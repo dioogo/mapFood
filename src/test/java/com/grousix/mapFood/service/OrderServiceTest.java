@@ -62,22 +62,4 @@ public class OrderServiceTest {
 		verify(orderRepository, times(1)).save(newOrder);
 	}
 	
-	@Test
-	public void testCreateOrder2() {
-		
-		Order order = new Order();
-		order.setCustomerId(5);
-		
-		order.setOrderItems(new ArrayList<>());
-		
-		List<OrderItemEntity> orderItemsEntities = new ArrayList<>();
-		
-		when(orderItemService.getOrderItems(order.getOrderItems())).thenReturn(orderItemsEntities);
-		
-		OrderEntity newOrder = new OrderEntity();
-		
-		service.createOrder(order);
-		
-		verify(orderRepository, times(1)).save(newOrder);
-	}
 }
