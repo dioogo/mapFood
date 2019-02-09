@@ -52,18 +52,15 @@ public class OrderService {
 		orderValidation.verifyPricesFromItems(orderItemsEntities);
 		orderValidation.verifyItemsFromSameRestaurant(orderItemsEntities, order);
 		
-		
 		orderEntity.setOrderDelivery(orderDeliveryService.create(orderEntity));
 		
-		
-		
-		// TODO calcular horarios
 		Timestamp outTime = verifyOutTime(orderEntity.getOrderDelivery().getEstimatedTimeToRestaurant());
 		
 		Timestamp timeToDelivery = estimateTimeToDelivery(orderEntity, outTime);
 		
 		System.out.println("Sai do restaurant " + outTime);
 		System.out.println("Entrega estimada  " + timeToDelivery);
+		System.out.println("\n\n");
 		
 		orderEntity.setEstimatedTimeToDelivery(timeToDelivery);
 

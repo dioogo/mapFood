@@ -33,7 +33,7 @@ public class OrderDeliveryService {
 		
 		Timestamp timeToRestaurant = estimateTimeToRestaurant(orderDeliveryEntity);
 		
-		
+		System.out.println("Motoboy:               " + orderDeliveryEntity.getMotoboy().getId());
 		System.out.println("Solicitado motoboy     " + new Timestamp(System.currentTimeMillis()));
 		System.out.println("Até o restaurant       " + timeToRestaurant);
 		
