@@ -34,8 +34,8 @@ public class OrderDeliveryService {
 		Timestamp timeToRestaurant = estimateTimeToRestaurant(orderDeliveryEntity);
 		
 		
-		System.out.println("Atual             " + new Timestamp(System.currentTimeMillis()));
-		System.out.println("Depois            " + timeToRestaurant);
+		System.out.println("Solicitado motoboy     " + new Timestamp(System.currentTimeMillis()));
+		System.out.println("Até o restaurant       " + timeToRestaurant);
 		
 		orderDeliveryEntity.setEstimatedTimeToRestaurant(timeToRestaurant);
 		
@@ -46,6 +46,9 @@ public class OrderDeliveryService {
 		LatLng start = new LatLng(orderDeliveryEntity.getMotoboy().getLat(), orderDeliveryEntity.getMotoboy().getLon());
 		LatLng end = new LatLng(orderDeliveryEntity.getOrder().getRestaurant().getLat(), orderDeliveryEntity.getOrder().getRestaurant().getLon());
 		
-		return TimestampUtil.addSeconds(googleMapsService.timeToReach(start, end));
+		long now = System.currentTimeMillis();
+		Timestamp time = new Timestamp(now);
+		
+		return TimestampUtil.addSeconds(googleMapsService.timeToReach(start, end), time);
 	}
 }
