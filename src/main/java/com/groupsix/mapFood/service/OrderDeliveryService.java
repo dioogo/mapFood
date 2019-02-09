@@ -18,10 +18,10 @@ public class OrderDeliveryService {
 	
 	@Autowired
 	private GoogleMapsService googleMapsService;
-
+	
 	public OrderDeliveryEntity create(OrderEntity orderEntity) {
 		OrderDeliveryEntity orderDeliveryEntity = new OrderDeliveryEntity();
-		
+
 		orderDeliveryEntity.setOrder(orderEntity);
 		orderDeliveryEntity.setDestinationLat(orderEntity.getCustomer().getLat());
 		orderDeliveryEntity.setDestinationLon(orderEntity.getCustomer().getLon());

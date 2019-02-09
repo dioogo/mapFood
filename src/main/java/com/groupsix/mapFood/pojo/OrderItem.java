@@ -1,12 +1,17 @@
 package com.groupsix.mapFood.pojo;
 
+import javax.validation.constraints.NotNull;
+
 public class OrderItem {
 	
 	private Integer id;
+	@NotNull
 	private Integer productId;
+	@NotNull
 	private Integer quantity;
 	private String name;
 	private Integer itemPrice;
+	@NotNull
 	private Integer total;
 	private Integer orderId;
 	

@@ -13,6 +13,12 @@ import org.springframework.http.ResponseEntity;
 
 import com.groupsix.mapFood.pojo.Order;
 import com.groupsix.mapFood.service.OrderService;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OrderControllerTest {
@@ -26,9 +32,15 @@ public class OrderControllerTest {
 	@Test
 	public void testCreateOrder() {
 		final Order order = new Order();
-		when(orderService.createOrder(order)).thenReturn(order);
-		
-		final ResponseEntity<Order> response = controller.createOrder(order);
+		final BindingResult validator = new BeanPropertyBindingResult(order, "order");
+
+		try {
+			when(orderService.createOrder(order)).thenReturn(order);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		final ResponseEntity<?> response = controller.createOrder(order, validator);
 		
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 		assertEquals(order, response.getBody());
