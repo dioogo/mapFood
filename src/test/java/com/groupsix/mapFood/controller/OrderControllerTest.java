@@ -15,10 +15,6 @@ import com.groupsix.mapFood.pojo.Order;
 import com.groupsix.mapFood.service.OrderService;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OrderControllerTest {

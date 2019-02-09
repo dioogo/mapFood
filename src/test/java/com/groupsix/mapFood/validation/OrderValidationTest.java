@@ -30,22 +30,18 @@ import static org.mockito.Mockito.when;
 public class OrderValidationTest {
 
     @Mock
-    private CustomerRepository customerRepository;
-
-    @Mock
-    private RestaurantRepository restaurantRepository;
-
-    @InjectMocks
     private CustomerService customerService;
 
-    @InjectMocks
+    @Mock
     private RestaurantService restaurantService;
+
+    @InjectMocks
+    private OrderValidation orderValidation;
 
     @Test
     public void testVerifyTotalOrder() {
 
         Order order = new Order();
-        OrderValidation orderValidation = new OrderValidation();
         List<OrderItem> orderItems = new ArrayList<>();
         OrderItem item1 = new OrderItem();
         OrderItem item2 = new OrderItem();
@@ -70,7 +66,6 @@ public class OrderValidationTest {
     public void testVerifyTotalOrderWithWrongTotal() {
 
         Order order = new Order();
-        OrderValidation orderValidation = new OrderValidation();
         List<OrderItem> orderItems = new ArrayList<>();
         OrderItem item1 = new OrderItem();
         OrderItem item2 = new OrderItem();
@@ -96,7 +91,6 @@ public class OrderValidationTest {
     public void testVerifyCustomerAndRestaurantDistance() {
 
         Order order = new Order();
-        OrderValidation orderValidation = new OrderValidation();
         CustomerEntity customer = new CustomerEntity();
         RestaurantEntity restaurant = new RestaurantEntity();
 
@@ -108,8 +102,36 @@ public class OrderValidationTest {
         restaurant.setLon(-0.48);
         restaurant.setLat(0.42);
 
-        when(customerRepository.getOne(9)).thenReturn(customer);
-        when(restaurantRepository.getOne(5)).thenReturn(restaurant);
+        when(customerService.getCustomer(9)).thenReturn(customer);
+        when(restaurantService.getRestaurant(5)).thenReturn(restaurant);
+
+        order.setCustomerId(9);
+        order.setRestaurantId(5);
+
+        try {
+            orderValidation.verifyCustomerAndRestaurantDistance(order);
+        } catch (CustomerTooFarException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testVerifyCustomerTooFarFromTheRestaurant() {
+
+        Order order = new Order();
+        CustomerEntity customer = new CustomerEntity();
+        RestaurantEntity restaurant = new RestaurantEntity();
+
+        customer.setId(9);
+        customer.setLon(-2.44);
+        customer.setLat(2.45);
+
+        restaurant.setId(5);
+        restaurant.setLon(-31.48);
+        restaurant.setLat(31.42);
+
+        when(customerService.getCustomer(9)).thenReturn(customer);
+        when(restaurantService.getRestaurant(5)).thenReturn(restaurant);
 
         order.setCustomerId(9);
         order.setRestaurantId(5);
@@ -123,38 +145,8 @@ public class OrderValidationTest {
     }
 
     @Test
-    public void testVerifyCustomerTooFarFromTheRestaurant() {
-
-        Order order = new Order();
-        OrderValidation orderValidation = new OrderValidation();
-        CustomerEntity customer = new CustomerEntity();
-        RestaurantEntity restaurant = new RestaurantEntity();
-
-        customer.setId(9);
-        customer.setLon(-2.44);
-        customer.setLat(2.45);
-
-        restaurant.setId(5);
-        restaurant.setLon(-31.48);
-        restaurant.setLat(31.42);
-
-        when(customerRepository.getOne(9)).thenReturn(customer);
-        when(restaurantRepository.getOne(5)).thenReturn(restaurant);
-
-        order.setCustomerId(9);
-        order.setRestaurantId(5);
-
-        try {
-            orderValidation.verifyCustomerAndRestaurantDistance(order);
-        } catch (CustomerTooFarException e) {
-            fail();
-        }
-    }
-
-    @Test
     public void testVerifyPricesFromItems() {
 
-        OrderValidation orderValidation = new OrderValidation();
         List<OrderItemEntity> orderItemsEntities = new ArrayList<>();
         ProductEntity product1 = new ProductEntity();
         ProductEntity product2 = new ProductEntity();
@@ -184,7 +176,6 @@ public class OrderValidationTest {
     @Test
     public void testVerifyPricesFromItemsWithWrongTotal() {
 
-        OrderValidation orderValidation = new OrderValidation();
         List<OrderItemEntity> orderItemsEntities = new ArrayList<>();
         ProductEntity product1 = new ProductEntity();
         ProductEntity product2 = new ProductEntity();
@@ -216,7 +207,6 @@ public class OrderValidationTest {
     public void testVerifyItemsFromSameRestaurant() {
 
         Order order = new Order();
-        OrderValidation orderValidation = new OrderValidation();
         List<OrderItemEntity> orderItemsEntities = new ArrayList<>();
         ProductEntity product1 = new ProductEntity();
         ProductEntity product2 = new ProductEntity();
@@ -249,7 +239,6 @@ public class OrderValidationTest {
     public void testVerifyItemsFromSameRestaurantWithDiferentRestaurants() {
 
         Order order = new Order();
-        OrderValidation orderValidation = new OrderValidation();
         List<OrderItemEntity> orderItemsEntities = new ArrayList<>();
         ProductEntity product1 = new ProductEntity();
         ProductEntity product2 = new ProductEntity();
