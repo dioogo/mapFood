@@ -1,5 +1,6 @@
 package com.groupsix.mapFood.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.groupsix.mapFood.entity.*;
@@ -8,10 +9,9 @@ import com.groupsix.mapFood.exception.DiferentRestaurantException;
 import com.groupsix.mapFood.exception.ItemsPriceException;
 import com.groupsix.mapFood.exception.TotalPriceException;
 import com.groupsix.mapFood.validation.OrderValidation;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.groupsix.mapFood.factory.OrderFactory;
 import com.groupsix.mapFood.pojo.Order;
 import com.groupsix.mapFood.repository.OrderRepository;
 
@@ -19,7 +19,10 @@ import com.groupsix.mapFood.repository.OrderRepository;
 public class OrderService {
 
 	@Autowired
-	private OrderRepository orderRepository;
+	private OrderValidation orderValidation;
+	
+	@Autowired
+	private CustomerService customerService;
 	
 	@Autowired
 	private OrderItemService orderItemService;
@@ -28,27 +31,40 @@ public class OrderService {
 	private OrderDeliveryService orderDeliveryService;
 	
 	@Autowired
-	private OrderFactory orderFactory;
-
+	private OrderRepository orderRepository;
+	
 	@Autowired
-	private OrderValidation orderValidation;
-
-	public Order createOrder(final Order order)
-			throws TotalPriceException, DiferentRestaurantException, CustomerTooFarException, ItemsPriceException {
-
+	private RestaurantService restaurantService;
+	
+	public Order createOrder(final Order order) throws TotalPriceException, ItemsPriceException, DiferentRestaurantException, CustomerTooFarException {
 		orderValidation.verifyTotalOrder(order);
 		orderValidation.verifyCustomerAndRestaurantDistance(order);
 
-		final List<OrderItemEntity> orderItemsEntities = orderItemService.getOrderItems(order.getOrderItems());
+		OrderEntity orderEntity = convertToEntity(order);
+
+		final List<OrderItemEntity> orderItemsEntities = orderItemService.getOrderItems(order.getOrderItems(), orderEntity);
 
 		orderValidation.verifyPricesFromItems(orderItemsEntities);
 		orderValidation.verifyItemsFromSameRestaurant(orderItemsEntities, order);
-
-		final OrderDeliveryEntity orderDeliveryEntity = orderDeliveryService.getOrderDelivery(order.getCustomerId());
-
-		final OrderEntity newOrder = orderFactory.fromDTO(order, orderItemsEntities, orderDeliveryEntity);
-		orderRepository.save(newOrder);
 		
+		
+		orderEntity.setOrderDelivery(orderDeliveryService.create(orderEntity));
+		
+		// TODO calcular horarios
+		orderEntity.setEstimatedTimeToDelivery(new Timestamp(8000));
+
+		orderRepository.save(orderEntity);
 		return order;
 	}
+	
+	public OrderEntity convertToEntity(Order order) {
+		OrderEntity entity = new OrderEntity();
+		entity.setId(order.getId());
+		entity.setCustomer(customerService.findById(order.getCustomerId()).get());
+		entity.setOrderItems(orderItemService.getOrderItems(order.getOrderItems(), entity));
+		entity.setRestaurant(restaurantService.findById(order.getRestaurantId()).get());
+		entity.setTotal(order.getTotal());
+		return entity;
+	}
+
 }

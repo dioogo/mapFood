@@ -46,8 +46,8 @@ public class OrderValidation {
     public void verifyCustomerAndRestaurantDistance(Order order)
             throws CustomerTooFarException {
 
-        CustomerEntity customer = customerService.getCustomer(order.getCustomerId());
-        RestaurantEntity restaurant = restaurantService.getRestaurant(order.getRestaurantId());
+        CustomerEntity customer = customerService.findById(order.getCustomerId()).get();
+        RestaurantEntity restaurant = restaurantService.findById(order.getRestaurantId()).get();
 
         Double distanceFromCustomerToRestaurant = Math.sqrt(
                 Math.pow(customer.getLon() - restaurant.getLon(), 2) +
