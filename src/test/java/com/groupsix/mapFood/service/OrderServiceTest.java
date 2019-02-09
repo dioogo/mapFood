@@ -45,7 +45,7 @@ public class OrderServiceTest {
 		
 		final List<OrderItemEntity> orderItemsEntities = new ArrayList<>();
 		
-		when(orderItemService.getOrderItems(orderItems)).thenReturn(orderItemsEntities);
+		when(orderItemService.getOrderItems(orderItems, null)).thenReturn(orderItemsEntities);
 		// when(orderDeliveryService.getOrderDelivery(5)).thenReturn(orderDeliveryEntity);
 		
 		final OrderEntity newOrder = new OrderEntity();
