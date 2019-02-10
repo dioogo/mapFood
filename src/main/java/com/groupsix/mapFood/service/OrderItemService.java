@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.groupsix.mapFood.entity.OrderEntity;
 import com.groupsix.mapFood.entity.OrderItemEntity;
 import com.groupsix.mapFood.entity.ProductEntity;
 import com.groupsix.mapFood.factory.OrderItemFactory;
@@ -22,7 +21,7 @@ public class OrderItemService {
 	@Autowired
 	private ProductRepository productRepository;
 	
-	public List<OrderItemEntity> getOrderItems(final List<OrderItem> orderItems, OrderEntity order) {
+	public List<OrderItemEntity> getOrderItems(final List<OrderItem> orderItems) {
 
 		List<OrderItemEntity> orderItemsEntities = new ArrayList<>();
 		
@@ -31,7 +30,6 @@ public class OrderItemService {
 			ProductEntity product = productRepository.getOne(orderItem.getProductId());
 
 			final OrderItemEntity orderItemEntity = orderItemFactory.fromDTO(orderItem, product);
-			orderItemEntity.setOrder(order);
 			orderItemsEntities.add(orderItemEntity);
 		});
 		

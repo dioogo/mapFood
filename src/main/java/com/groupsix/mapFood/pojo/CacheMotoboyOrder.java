@@ -7,7 +7,7 @@ public class CacheMotoboyOrder {
 	private Integer id;
 	private Integer restaurantId;
 	private CacheDestination cacheDestination;
-	private Timestamp timeToMotoboyArriveAtRestaurant;
+	private Timestamp timeToMotoboyArrivesAtRestaurant;
 	private Timestamp timeToDelivery;
 	
 	public Integer getId() {
@@ -34,12 +34,12 @@ public class CacheMotoboyOrder {
 		this.cacheDestination = cacheDestination;
 	}
 
-	public Timestamp getTimeToMotoboyArriveAtRestaurant() {
-		return timeToMotoboyArriveAtRestaurant;
+	public Timestamp getTimeToMotoboyArrivesAtRestaurant() {
+		return timeToMotoboyArrivesAtRestaurant;
 	}
 
-	public void setTimeToMotoboyArriveAtRestaurant(Timestamp timeToMotoboyArriveAtRestaurant) {
-		this.timeToMotoboyArriveAtRestaurant = timeToMotoboyArriveAtRestaurant;
+	public void setTimeToMotoboyArrivesAtRestaurant(Timestamp timeToMotoboyArrivesAtRestaurant) {
+		this.timeToMotoboyArrivesAtRestaurant = timeToMotoboyArrivesAtRestaurant;
 	}
 
 	public Timestamp getTimeToDelivery() {

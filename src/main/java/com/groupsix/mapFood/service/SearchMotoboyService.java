@@ -31,6 +31,9 @@ public class SearchMotoboyService {
 
 	@Autowired
 	private CacheSearchMotoboyService cacheSearchMotoboyService;
+	
+	@Autowired
+	private TimestampUtil timestampUtil;
 
 	public void searchMotoboy(OrderEntity orderEntity) {
 
@@ -72,14 +75,13 @@ public class SearchMotoboyService {
 		cacheDestination.setLat(orderEntity.getCustomer().getLat());
 		cacheDestination.setLon(orderEntity.getCustomer().getLon());
 		cacheMotoboyOrder.setCacheDestination(cacheDestination);
-		cacheMotoboyOrder.setTimeToMotoboyArriveAtRestaurant(timeToMotoboyArriveAtRestaurant);
+		cacheMotoboyOrder.setTimeToMotoboyArrivesAtRestaurant(timeToMotoboyArriveAtRestaurant);
 		cacheMotoboyOrder.setTimeToDelivery(timeToDelivery);
 		return cacheMotoboyOrder;
 	}
 
 	private Timestamp verifyTimeToOrderLeavesTheRestaurant(Timestamp estimatedTimeToRestaurant) {
-		long time = System.currentTimeMillis();
-		Timestamp tenMinutes = TimestampUtil.addSeconds(600L, new Timestamp(time));
+		Timestamp tenMinutes = timestampUtil.addSecondsFromNow(600L);
 
 		if (estimatedTimeToRestaurant.before(tenMinutes)) {
 			return tenMinutes;

@@ -21,9 +21,12 @@ public class CalculateTimestamp {
 	@Autowired
 	private GoogleMapsService googleMapsService;
 	
+	@Autowired
+	private TimestampUtil timestampUtil;
+	
 	public Timestamp calculateEstimatedTimeToDelivery(OrderEntity orderEntity, CacheMotoboy cachedMotoboy,
 			Timestamp timeToOrderLeavesTheRestaurant) {
-		Timestamp timeToDelivery;
+		Timestamp timeToDelivery = null;
 		if (cachedMotoboy.getOrders().size() == 0) {
 			timeToDelivery = estimateTimeToDelivery(orderEntity, timeToOrderLeavesTheRestaurant);
 		} else {
@@ -39,7 +42,7 @@ public class CalculateTimestamp {
 			CacheMotoboy cachedMotoboy) {
 		Timestamp timeToMotoboyArriveAtRestaurant;
 		if (cachedMotoboy.getOrders().size() != 0) {
-			timeToMotoboyArriveAtRestaurant = cachedMotoboy.getOrders().get(0).getTimeToMotoboyArriveAtRestaurant();
+			timeToMotoboyArriveAtRestaurant = cachedMotoboy.getOrders().get(0).getTimeToMotoboyArrivesAtRestaurant();
 		} else {
 			timeToMotoboyArriveAtRestaurant = estimateTimeToMotoboyArriveAtRestaurant(restaurantEntity, cachedMotoboy);
 		}
@@ -51,24 +54,21 @@ public class CalculateTimestamp {
 				orderEntity.getRestaurant().getLon());
 		LatLng customerPosition = new LatLng(orderEntity.getCustomer().getLat(), orderEntity.getCustomer().getLon());
 
-		return TimestampUtil.addSeconds(googleMapsService.timeToReach(restaurantPosition, customerPosition), outTime);
+		return timestampUtil.addSeconds(googleMapsService.timeToReach(restaurantPosition, customerPosition), outTime);
 	}
 
 	private Timestamp estimateTimeToDeliveryFromOtherCustomer(CacheDestination cacheDestination,
 			CustomerEntity customerDestination, Timestamp outTime) {
-		LatLng restaurantPosition = new LatLng(cacheDestination.getLat(), cacheDestination.getLon());
+		LatLng customerFromLastOrderPosition = new LatLng(cacheDestination.getLat(), cacheDestination.getLon());
 		LatLng customerPosition = new LatLng(customerDestination.getLat(), customerDestination.getLon());
 
-		return TimestampUtil.addSeconds(googleMapsService.timeToReach(restaurantPosition, customerPosition), outTime);
+		return timestampUtil.addSeconds(googleMapsService.timeToReach(customerFromLastOrderPosition, customerPosition), outTime);
 	}
 
 	private Timestamp estimateTimeToMotoboyArriveAtRestaurant(RestaurantEntity restaurantEntity, CacheMotoboy cachedMotoboy) {
 		LatLng start = new LatLng(cachedMotoboy.getLat(), cachedMotoboy.getLon());
 		LatLng end = new LatLng(restaurantEntity.getLat(), restaurantEntity.getLon());
 
-		long now = System.currentTimeMillis();
-		Timestamp time = new Timestamp(now);
-
-		return TimestampUtil.addSeconds(googleMapsService.timeToReach(start, end), time);
+		return timestampUtil.addSecondsFromNow(googleMapsService.timeToReach(start, end));
 	}
 }

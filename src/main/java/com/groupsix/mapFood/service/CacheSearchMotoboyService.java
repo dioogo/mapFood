@@ -21,47 +21,51 @@ public class CacheSearchMotoboyService {
 
 	private static final int MAX_ORDERS_PER_MOTOBOY = 5;
 	private static final int LIMIT_MOTOBOYS_TO_QUERY_IN_GOOGLE = 3;
+
 	@Autowired
 	private CalculateTimestamp calculateTimestamp;
+
+	@Autowired
+	private TimestampUtil timestampUtil;
 
 	public CacheMotoboyDistance getNearestMotoboy(RestaurantEntity restaurantEntity, List<CacheMotoboy> cache) {
 
 		List<CacheMotoboy> cacheMotoboysWithSameRestaurant = searchForMotoboysDeliveringForSameRestaurant(
 				restaurantEntity, cache);
 
-		long time = System.currentTimeMillis();
-		Timestamp tenMinutes = TimestampUtil.addSeconds(600L, new Timestamp(time));
+		
 
 		if (cacheMotoboysWithSameRestaurant.size() != 0) {
-			
-			//Filtro por motoboys que estão entregando no mesmo restaurante com menos de 5 pedidos e que 
+
+			Timestamp tenMinutes = timestampUtil.addSecondsFromNow(600L);
+			// Filtro por motoboys que estão entregando no mesmo restaurante com menos de 5
+			// pedidos e que
 			// vai chegar depois do novo pedido ficar pronto
 			Optional<CacheMotoboy> optionalCacheMotoboy = cacheMotoboysWithSameRestaurant.stream()
 					.filter(c -> c.getOrders().size() < MAX_ORDERS_PER_MOTOBOY
-							&& c.getOrders().get(0).getTimeToMotoboyArriveAtRestaurant().after(tenMinutes))
+							&& c.getOrders().get(0).getTimeToMotoboyArrivesAtRestaurant().after(tenMinutes))
 					.findFirst();
 			if (optionalCacheMotoboy.isPresent()) {
-				Timestamp estimatedTimeMotoboyArrivesAtRestaurant = calculateTimestamp
-						.calculateEstimatedTimeMotoboyArrivesAtRestaurant(restaurantEntity,
-								optionalCacheMotoboy.get());
-				return new CacheMotoboyDistance(optionalCacheMotoboy.get(), estimatedTimeMotoboyArrivesAtRestaurant);
+				return new CacheMotoboyDistance(optionalCacheMotoboy.get(),
+						optionalCacheMotoboy.get().getOrders().get(0).getTimeToMotoboyArrivesAtRestaurant());
 			}
 		}
 
-		return getNearestMotoboyWithoutOrders(restaurantEntity, cache,
-				cacheMotoboysWithSameRestaurant);
+		return getNearestMotoboyWithoutOrders(restaurantEntity, cache, cacheMotoboysWithSameRestaurant);
 
 	}
 
-	private CacheMotoboyDistance getNearestMotoboyWithoutOrders(RestaurantEntity restaurantEntity, List<CacheMotoboy> cache,
-			List<CacheMotoboy> cacheMotoboysWithSameRestaurant) {
-		
-		// Removo os motoboys com pedido no mesmo restaurante mas que não se aplicaram a regra de reusar um motoboy
+	private CacheMotoboyDistance getNearestMotoboyWithoutOrders(RestaurantEntity restaurantEntity,
+			List<CacheMotoboy> cache, List<CacheMotoboy> cacheMotoboysWithSameRestaurant) {
+
+		// Removo os motoboys com pedido no mesmo restaurante mas que não se aplicaram a
+		// regra de reusar um motoboy
 		Stream<CacheMotoboy> stream = cacheMotoboysWithSameRestaurant.size() == 0 ? cache.stream()
 				: cache.stream().filter(c -> !cacheMotoboysWithSameRestaurant.stream().map(c1 -> c1.getId())
 						.collect(Collectors.toList()).contains(c.getId()));
 
-		// Removo os motoboys com pedidos de outros restaurantes e pego os três mais próximos
+		// Removo os motoboys com pedidos de outros restaurantes e pego os três mais
+		// próximos
 		Stream<CacheMotoboy> nearestMotoboys = stream.filter(c -> c.getOrders().size() == 0)
 				.sorted((c1, c2) -> Double.compare(
 						DistanceUtil.distance(c1.getLat(), c1.getLon(), restaurantEntity.getLat(),
@@ -70,7 +74,8 @@ public class CacheSearchMotoboyService {
 								restaurantEntity.getLon())))
 				.limit(LIMIT_MOTOBOYS_TO_QUERY_IN_GOOGLE);
 
-		// Dos três mais próximos, eu calculo qual chega mais rápido baseado no Google Maps
+		// Dos três mais próximos, eu calculo qual chega mais rápido baseado no Google
+		// Maps
 		return nearestMotoboys
 				.map(m -> new CacheMotoboyDistance(m,
 						calculateTimestamp.calculateEstimatedTimeMotoboyArrivesAtRestaurant(restaurantEntity, m)))
