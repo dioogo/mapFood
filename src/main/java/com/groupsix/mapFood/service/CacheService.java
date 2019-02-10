@@ -29,4 +29,12 @@ public class CacheService {
 		Type listType = new TypeToken<ArrayList<CacheMotoboy>>(){}.getType();
 		return new Gson().fromJson(entity.getData(), listType);
 	}
+	
+	public void updateCache(List<CacheMotoboy> cacheMotoboys) {
+		CacheEntity entity = new CacheEntity();
+		entity.setId(CACHE_ID);
+		entity.setData(new Gson().toJson(cacheMotoboys));
+		
+		cacheRepository.save(entity);
+	}
 }

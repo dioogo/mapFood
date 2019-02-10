@@ -22,6 +22,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static junit.framework.TestCase.fail;
 import static org.mockito.Mockito.when;
@@ -102,8 +103,8 @@ public class OrderValidationTest {
         restaurant.setLon(-0.48);
         restaurant.setLat(0.42);
 
-        when(customerService.getCustomer(9)).thenReturn(customer);
-        when(restaurantService.getRestaurant(5)).thenReturn(restaurant);
+        when(customerService.findById(9)).thenReturn(Optional.of(customer));
+        when(restaurantService.findById(5)).thenReturn(Optional.of(restaurant));
 
         order.setCustomerId(9);
         order.setRestaurantId(5);
@@ -130,8 +131,8 @@ public class OrderValidationTest {
         restaurant.setLon(-31.48);
         restaurant.setLat(31.42);
 
-        when(customerService.getCustomer(9)).thenReturn(customer);
-        when(restaurantService.getRestaurant(5)).thenReturn(restaurant);
+        when(customerService.findById(9)).thenReturn(Optional.of(customer));
+        when(restaurantService.findById(5)).thenReturn(Optional.of(restaurant));
 
         order.setCustomerId(9);
         order.setRestaurantId(5);

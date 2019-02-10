@@ -1,9 +1,7 @@
 package com.groupsix.mapFood.service;
 
-import java.sql.Timestamp;
 import java.util.List;
 
-import com.google.maps.model.LatLng;
 import com.groupsix.mapFood.entity.*;
 import com.groupsix.mapFood.exception.CustomerTooFarException;
 import com.groupsix.mapFood.exception.DiferentRestaurantException;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.groupsix.mapFood.pojo.Order;
 import com.groupsix.mapFood.repository.OrderRepository;
-import com.groupsix.mapFood.util.TimestampUtil;
 
 @Service
 public class OrderService {
@@ -39,7 +36,7 @@ public class OrderService {
 	private RestaurantService restaurantService;
 	
 	@Autowired
-	private GoogleMapsService googleMapsService;
+	private SearchMotoboyService searchMotoboyService;
 	
 	public Order createOrder(final Order order) throws TotalPriceException, ItemsPriceException, DiferentRestaurantException, CustomerTooFarException {
 		orderValidation.verifyTotalOrder(order);
@@ -54,36 +51,11 @@ public class OrderService {
 		
 		orderEntity.setOrderDelivery(orderDeliveryService.create(orderEntity));
 		
-		Timestamp outTime = verifyOutTime(orderEntity.getOrderDelivery().getEstimatedTimeToRestaurant());
+		orderEntity = orderRepository.save(orderEntity);
 		
-		Timestamp timeToDelivery = estimateTimeToDelivery(orderEntity, outTime);
+		searchMotoboyService.searchMotoboy(orderEntity);
 		
-		System.out.println("Sai do restaurant " + outTime);
-		System.out.println("Entrega estimada  " + timeToDelivery);
-		System.out.println("\n\n");
-		
-		orderEntity.setEstimatedTimeToDelivery(timeToDelivery);
-
-		orderRepository.save(orderEntity);
 		return order;
-	}
-	
-	private Timestamp verifyOutTime(Timestamp estimatedTimeToRestaurant) {
-		long time = System.currentTimeMillis();
-		Timestamp tenMinutes = TimestampUtil.addSeconds(600L, new Timestamp(time));
-		
-		if (estimatedTimeToRestaurant.before(tenMinutes)) {
-			return tenMinutes;
-		} else {
-			return estimatedTimeToRestaurant;
-		}
-	}
-
-	private Timestamp estimateTimeToDelivery(OrderEntity orderEntity, Timestamp outTime) {
-		LatLng start = new LatLng(orderEntity.getRestaurant().getLat(), orderEntity.getRestaurant().getLon());
-		LatLng end = new LatLng(orderEntity.getCustomer().getLat(), orderEntity.getCustomer().getLon());
-		
-		return TimestampUtil.addSeconds(googleMapsService.timeToReach(start, end), outTime);
 	}
 	
 	public OrderEntity convertToEntity(Order order) {
