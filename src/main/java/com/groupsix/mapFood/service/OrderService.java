@@ -2,6 +2,8 @@ package com.groupsix.mapFood.service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.groupsix.mapFood.entity.*;
 import com.groupsix.mapFood.exception.CustomerTooFarException;
@@ -55,6 +57,10 @@ public class OrderService {
 
 		orderRepository.save(orderEntity);
 		return order;
+	}
+
+	public OrderEntity findAllByRestaurant(Integer id) {
+		return orderRepository.findById(id).get();
 	}
 	
 	public OrderEntity convertToEntity(Order order) {
