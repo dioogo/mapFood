@@ -1,7 +1,10 @@
 package com.groupsix.mapFood.service;
 
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import com.google.maps.model.LatLng;
 import com.groupsix.mapFood.entity.*;
@@ -9,6 +12,7 @@ import com.groupsix.mapFood.exception.CustomerTooFarException;
 import com.groupsix.mapFood.exception.DiferentRestaurantException;
 import com.groupsix.mapFood.exception.ItemsPriceException;
 import com.groupsix.mapFood.exception.TotalPriceException;
+import com.groupsix.mapFood.factory.OrderFactory;
 import com.groupsix.mapFood.validation.OrderValidation;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +44,9 @@ public class OrderService {
 	
 	@Autowired
 	private GoogleMapsService googleMapsService;
+
+	@Autowired
+	private OrderFactory orderFactory;
 	
 	public Order createOrder(final Order order) throws TotalPriceException, ItemsPriceException, DiferentRestaurantException, CustomerTooFarException {
 		orderValidation.verifyTotalOrder(order);
@@ -96,4 +103,8 @@ public class OrderService {
 		return entity;
 	}
 
+    public List<Order> listOrder(Integer id) {
+		return StreamSupport.stream(orderRepository.findByCustomer_Id(id).spliterator(), false).map(orderFactory::getInstance).collect(Collectors.toList());
+
+    }
 }

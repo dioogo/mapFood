@@ -2,10 +2,7 @@ package com.groupsix.mapFood.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -32,5 +29,15 @@ public class OrderController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
 		}
+	}
+
+	@GetMapping("/user/{id}")
+	public ResponseEntity<?> listOrder(@PathVariable Integer id){
+		if(orderService.listOrder(id).isEmpty()){
+			return ResponseEntity.ok("Nenhum pedido");
+		}else{
+			return ResponseEntity.ok(orderService.listOrder(id));
+		}
+
 	}
 }

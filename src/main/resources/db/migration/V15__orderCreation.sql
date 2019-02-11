@@ -1,4 +1,4 @@
-CREATE TABLE `mapfood`.`order` (
+CREATE TABLE `mapfood`.`orders` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `customer_id` INT NOT NULL,
   `restaurant_id` INT NOT NULL,
@@ -6,17 +6,17 @@ CREATE TABLE `mapfood`.`order` (
   `total` INT NOT NULL,
   PRIMARY KEY (`id`));
 
-ALTER TABLE `mapfood`.`order` 
-ADD INDEX `fk_order_1_idx` (`customer_id` ASC),
-ADD INDEX `fk_order_2_idx` (`restaurant_id` ASC);
+ALTER TABLE `mapfood`.`orders`
+ADD INDEX `fk_orders_1_idx` (`customer_id` ASC),
+ADD INDEX `fk_orders_2_idx` (`restaurant_id` ASC);
 ;
-ALTER TABLE `mapfood`.`order` 
-ADD CONSTRAINT `fk_order_1`
+ALTER TABLE `mapfood`.`orders`
+ADD CONSTRAINT `fk_orders_1`
   FOREIGN KEY (`customer_id`)
   REFERENCES `mapfood`.`customer` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION,
-ADD CONSTRAINT `fk_order_2`
+ADD CONSTRAINT `fk_orders_2`
   FOREIGN KEY (`restaurant_id`)
   REFERENCES `mapfood`.`restaurant` (`id`)
   ON DELETE NO ACTION
@@ -36,7 +36,7 @@ CREATE TABLE `mapfood`.`order_item` (
   INDEX `fk_order_item_2_idx` (`product_id` ASC),
   CONSTRAINT `fk_order_item_1`
     FOREIGN KEY (`order_id`)
-    REFERENCES `mapfood`.`order` (`id`)
+    REFERENCES `mapfood`.`orders` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_order_item_2`
@@ -57,7 +57,7 @@ CREATE TABLE `mapfood`.`order_delivery` (
   INDEX `fk_order_delivery_2_idx` (`motoboy_id` ASC),
   CONSTRAINT `fk_order_delivery_1`
     FOREIGN KEY (`order_id`)
-    REFERENCES `mapfood`.`order` (`id`)
+    REFERENCES `mapfood`.`orders` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_order_delivery_2`
@@ -66,5 +66,5 @@ CREATE TABLE `mapfood`.`order_delivery` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-ALTER TABLE `mapfood`.`order_delivery` 
+ALTER TABLE `mapfood`.`order_delivery`
 CHANGE COLUMN `estimated_time_to_restaurant` `estimated_time_to_restaurant` TIMESTAMP NULL DEFAULT NULL ;
