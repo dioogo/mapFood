@@ -10,8 +10,6 @@ import com.groupsix.mapFood.exception.ItemsPriceException;
 import com.groupsix.mapFood.exception.TotalPriceException;
 import com.groupsix.mapFood.pojo.Order;
 import com.groupsix.mapFood.pojo.OrderItem;
-import com.groupsix.mapFood.repository.CustomerRepository;
-import com.groupsix.mapFood.repository.RestaurantRepository;
 import com.groupsix.mapFood.service.CustomerService;
 import com.groupsix.mapFood.service.RestaurantService;
 import org.junit.Test;
@@ -22,8 +20,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static junit.framework.TestCase.fail;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,7 +37,7 @@ public class OrderValidationTest {
     private OrderValidation orderValidation;
 
     @Test
-    public void testVerifyTotalOrder() {
+    public void testVerifyTotalOrder() throws TotalPriceException {
 
         Order order = new Order();
         List<OrderItem> orderItems = new ArrayList<>();
@@ -55,15 +53,11 @@ public class OrderValidationTest {
         order.setTotal(800);
         order.setOrderItems(orderItems);
 
-        try {
-            orderValidation.verifyTotalOrder(order);
-        } catch (TotalPriceException e) {
-            fail();
-        }
+        orderValidation.verifyTotalOrder(order);
     }
 
-    @Test
-    public void testVerifyTotalOrderWithWrongTotal() {
+    @Test(expected=TotalPriceException.class)
+    public void testVerifyTotalOrderWithWrongTotal() throws TotalPriceException {
 
         Order order = new Order();
         List<OrderItem> orderItems = new ArrayList<>();
@@ -79,16 +73,11 @@ public class OrderValidationTest {
         order.setTotal(700);
         order.setOrderItems(orderItems);
 
-        try {
-            orderValidation.verifyTotalOrder(order);
-        } catch (TotalPriceException e) {
-            return;
-        }
-        fail();
+        orderValidation.verifyTotalOrder(order);
     }
 
     @Test
-    public void testVerifyCustomerAndRestaurantDistance() {
+    public void testVerifyCustomerAndRestaurantDistance() throws CustomerTooFarException {
 
         Order order = new Order();
         CustomerEntity customer = new CustomerEntity();
@@ -102,21 +91,17 @@ public class OrderValidationTest {
         restaurant.setLon(-0.48);
         restaurant.setLat(0.42);
 
-        when(customerService.getCustomer(9)).thenReturn(customer);
-        when(restaurantService.getRestaurant(5)).thenReturn(restaurant);
+        when(customerService.findById(9)).thenReturn(Optional.of(customer));
+        when(restaurantService.findById(5)).thenReturn(Optional.of(restaurant));
 
         order.setCustomerId(9);
         order.setRestaurantId(5);
 
-        try {
-            orderValidation.verifyCustomerAndRestaurantDistance(order);
-        } catch (CustomerTooFarException e) {
-            fail();
-        }
+        orderValidation.verifyCustomerAndRestaurantDistance(order);
     }
 
-    @Test
-    public void testVerifyCustomerTooFarFromTheRestaurant() {
+    @Test(expected=CustomerTooFarException.class)
+    public void testVerifyCustomerTooFarFromTheRestaurant() throws CustomerTooFarException {
 
         Order order = new Order();
         CustomerEntity customer = new CustomerEntity();
@@ -130,22 +115,17 @@ public class OrderValidationTest {
         restaurant.setLon(-31.48);
         restaurant.setLat(31.42);
 
-        when(customerService.getCustomer(9)).thenReturn(customer);
-        when(restaurantService.getRestaurant(5)).thenReturn(restaurant);
+        when(customerService.findById(9)).thenReturn(Optional.of(customer));
+        when(restaurantService.findById(5)).thenReturn(Optional.of(restaurant));
 
         order.setCustomerId(9);
         order.setRestaurantId(5);
 
-        try {
-            orderValidation.verifyCustomerAndRestaurantDistance(order);
-        } catch (CustomerTooFarException e) {
-            return;
-        }
-        fail();
+        orderValidation.verifyCustomerAndRestaurantDistance(order);
     }
 
     @Test
-    public void testVerifyPricesFromItems() {
+    public void testVerifyPricesFromItems() throws ItemsPriceException {
 
         List<OrderItemEntity> orderItemsEntities = new ArrayList<>();
         ProductEntity product1 = new ProductEntity();
@@ -166,15 +146,11 @@ public class OrderValidationTest {
         orderItemsEntities.add(item1);
         orderItemsEntities.add(item2);
 
-        try {
-            orderValidation.verifyPricesFromItems(orderItemsEntities);
-        } catch (ItemsPriceException e) {
-            fail();
-        }
+        orderValidation.verifyPricesFromItems(orderItemsEntities);
     }
 
-    @Test
-    public void testVerifyPricesFromItemsWithWrongTotal() {
+    @Test(expected=ItemsPriceException.class)
+    public void testVerifyPricesFromItemsWithWrongTotal() throws ItemsPriceException {
 
         List<OrderItemEntity> orderItemsEntities = new ArrayList<>();
         ProductEntity product1 = new ProductEntity();
@@ -195,16 +171,11 @@ public class OrderValidationTest {
         orderItemsEntities.add(item1);
         orderItemsEntities.add(item2);
 
-        try {
-            orderValidation.verifyPricesFromItems(orderItemsEntities);
-        } catch (ItemsPriceException e) {
-            return;
-        }
-        fail();
+        orderValidation.verifyPricesFromItems(orderItemsEntities);
     }
 
     @Test
-    public void testVerifyItemsFromSameRestaurant() {
+    public void testVerifyItemsFromSameRestaurant() throws DiferentRestaurantException {
 
         Order order = new Order();
         List<OrderItemEntity> orderItemsEntities = new ArrayList<>();
@@ -228,15 +199,11 @@ public class OrderValidationTest {
         orderItemsEntities.add(item1);
         orderItemsEntities.add(item2);
 
-        try {
-            orderValidation.verifyItemsFromSameRestaurant(orderItemsEntities, order);
-        } catch (DiferentRestaurantException e) {
-            fail();
-        }
+        orderValidation.verifyItemsFromSameRestaurant(orderItemsEntities, order);
     }
 
-    @Test
-    public void testVerifyItemsFromSameRestaurantWithDiferentRestaurants() {
+    @Test(expected=DiferentRestaurantException.class)
+    public void testVerifyItemsFromSameRestaurantWithDiferentRestaurants() throws DiferentRestaurantException {
 
         Order order = new Order();
         List<OrderItemEntity> orderItemsEntities = new ArrayList<>();
@@ -260,11 +227,6 @@ public class OrderValidationTest {
         orderItemsEntities.add(item1);
         orderItemsEntities.add(item2);
 
-        try {
-            orderValidation.verifyItemsFromSameRestaurant(orderItemsEntities, order);
-        } catch (DiferentRestaurantException e) {
-            return;
-        }
-        fail();
+        orderValidation.verifyItemsFromSameRestaurant(orderItemsEntities, order);
     }
 }
