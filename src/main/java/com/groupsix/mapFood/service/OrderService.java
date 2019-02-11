@@ -37,9 +37,6 @@ public class OrderService {
 	private RestaurantService restaurantService;
 
 	@Autowired
-	private SearchMotoboyService searchMotoboyService;
-
-	@Autowired
 	private OrderFactory orderFactory;
 
 	public Order createOrder(final Order order)
@@ -61,7 +58,7 @@ public class OrderService {
 
 		orderEntity = orderRepository.save(orderEntity);
 
-		searchMotoboyService.searchMotoboy(orderEntity);
+		orderDeliveryService.searchMotoboy(orderEntity);
 
 		return order;
 	}

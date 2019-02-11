@@ -47,9 +47,6 @@ public class OrderServiceTest {
 	private RestaurantService restaurantService;
 	
 	@Mock
-	private SearchMotoboyService searchMotoboyService;
-	
-	@Mock
 	private OrderValidation orderValidation;
 
 	@InjectMocks
@@ -84,6 +81,6 @@ public class OrderServiceTest {
 		service.createOrder(order);
 		
 		verify(orderRepository, times(1)).save(newOrder);
-		verify(searchMotoboyService, times(1)).searchMotoboy(newOrder);
+		verify(orderDeliveryService, times(1)).searchMotoboy(newOrder);
 	}
 }

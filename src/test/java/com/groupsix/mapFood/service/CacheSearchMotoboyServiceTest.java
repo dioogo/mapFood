@@ -52,7 +52,7 @@ public class CacheSearchMotoboyServiceTest {
 		cache.add(m2);
 		
 		Timestamp tenMinutes = new Timestamp(600L);
-		when(timestampUtil.addSecondsFromNow(600L)).thenReturn(tenMinutes);
+		when(timestampUtil.addTenMinutesFromNow()).thenReturn(tenMinutes);
 		
 		RestaurantEntity restaurantEntity = new RestaurantEntity();
 		restaurantEntity.setId(1);

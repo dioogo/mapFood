@@ -1,9 +1,9 @@
 package com.groupsix.mapFood.service;
 
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import com.groupsix.mapFood.timestamp.CalculateTimestamp;
 import com.groupsix.mapFood.util.TimestampUtil;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SearchMotoboyServiceTest {
+public class OrderDeliveryServiceTest {
 
 	@Mock
 	private CacheService cacheService;
@@ -44,7 +44,7 @@ public class SearchMotoboyServiceTest {
 	private TimestampUtil timestampUtil;
 	
 	@InjectMocks
-	private SearchMotoboyService service;
+	private OrderDeliveryService service;
 	
 	@Test
 	public void testSearchMotoboyWithMotoboyArrivingBeforeOrderReady() {
@@ -76,7 +76,7 @@ public class SearchMotoboyServiceTest {
 		when(cacheSearchMotoboyService.getNearestMotoboy(restaurant, cache)).thenReturn(cacheMotoboyDistance);
 		
 		Timestamp tenMinutes = new Timestamp(600L);
-		when(timestampUtil.addSecondsFromNow(600L)).thenReturn(tenMinutes);
+		when(timestampUtil.addTenMinutesFromNow()).thenReturn(tenMinutes);
 		
 		Timestamp timeToDelivery = new Timestamp(1000L);
 		when(calculateTimestamp.calculateEstimatedTimeToDelivery(order, motoboy, tenMinutes)).thenReturn(timeToDelivery);
@@ -126,7 +126,7 @@ public class SearchMotoboyServiceTest {
 		when(cacheSearchMotoboyService.getNearestMotoboy(restaurant, cache)).thenReturn(cacheMotoboyDistance);
 		
 		Timestamp tenMinutes = new Timestamp(600L);
-		when(timestampUtil.addSecondsFromNow(600L)).thenReturn(tenMinutes);
+		when(timestampUtil.addTenMinutesFromNow()).thenReturn(tenMinutes);
 		
 		Timestamp timeToDelivery = new Timestamp(1000L);
 		when(calculateTimestamp.calculateEstimatedTimeToDelivery(order, motoboy, timestampArrivesAtRestaurant)).thenReturn(timeToDelivery);

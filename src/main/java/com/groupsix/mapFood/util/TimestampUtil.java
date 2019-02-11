@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class TimestampUtil {
 
+	private static final long TEN_MINUTES = 600L;
+
 	public Timestamp addSeconds(Long sec, Timestamp time) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time.getTime());
@@ -21,5 +23,9 @@ public class TimestampUtil {
 		Timestamp time = new Timestamp(now);
 		
         return addSeconds(sec, time);
+	}
+	
+	public Timestamp addTenMinutesFromNow() {
+        return addSecondsFromNow(TEN_MINUTES);
 	}
 }

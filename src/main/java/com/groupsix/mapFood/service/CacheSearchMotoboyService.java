@@ -33,11 +33,9 @@ public class CacheSearchMotoboyService {
 		List<CacheMotoboy> cacheMotoboysWithSameRestaurant = searchForMotoboysDeliveringForSameRestaurant(
 				restaurantEntity, cache);
 
-		
-
 		if (cacheMotoboysWithSameRestaurant.size() != 0) {
 
-			Timestamp tenMinutes = timestampUtil.addSecondsFromNow(600L);
+			Timestamp tenMinutes = timestampUtil.addTenMinutesFromNow();
 			// Filtro por motoboys que estão entregando no mesmo restaurante com menos de 5
 			// pedidos e que
 			// vai chegar depois do novo pedido ficar pronto
