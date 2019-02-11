@@ -9,5 +9,4 @@ public class MapFoodApiApp {
 	public static void main (String[] args) {
 		SpringApplication.run(MapFoodApiApp.class, args);
 	}
-	
 }

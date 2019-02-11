@@ -11,6 +11,7 @@ import com.groupsix.mapFood.exception.DiferentRestaurantException;
 import com.groupsix.mapFood.exception.ItemsPriceException;
 import com.groupsix.mapFood.exception.TotalPriceException;
 import com.groupsix.mapFood.validation.OrderValidation;
+import com.groupsix.mapFood.pojo.RestaurantOrderReport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,8 +60,8 @@ public class OrderService {
 		return order;
 	}
 
-	public OrderEntity findAllByRestaurant(Integer id) {
-		return orderRepository.findById(id).get();
+	public List<RestaurantOrderReport> findAllByRestaurantId(Integer id) {
+		return orderRepository.findAllByRestaurantId(id);
 	}
 	
 	public OrderEntity convertToEntity(Order order) {
