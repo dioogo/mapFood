@@ -2,7 +2,10 @@ package com.groupsix.mapFood.service;
 
 import java.sql.Timestamp;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -107,4 +110,19 @@ public class OrderService {
 		return StreamSupport.stream(orderRepository.findByCustomer_Id(id).spliterator(), false).map(orderFactory::getInstance).collect(Collectors.toList());
 
     }
+
+    public List<Order> listRestaurantOrder(Integer id){
+		return StreamSupport.stream(orderRepository.findByRestaurant_Id(id).spliterator(), false).map(orderFactory::getInstance).collect(Collectors.toList());
+	}
+
+	public Map<String, String> informationsRestaurant(Integer id){
+		int numeroPedidos = (int) StreamSupport.stream(orderRepository.findByRestaurant_Id(id).spliterator(), false).count();
+		int numeroUsuarios = (int) StreamSupport.stream(orderRepository.findByRestaurant_Id(id).spliterator(), false).map(orderFactory::getInstance).collect(Collectors.groupingBy(), Collectors.counting());
+		HashMap<String, String> map = new HashMap<>();
+		map.put("numero_pedidos", String.valueOf(numeroPedidos));
+		map.put("numero_clientes", "bar");
+		map.put("faturamento", "bb");
+		return map;
+
+	}
 }

@@ -32,11 +32,30 @@ public class OrderController {
 	}
 
 	@GetMapping("/user/{id}")
-	public ResponseEntity<?> listOrder(@PathVariable Integer id){
+	public ResponseEntity<?> listUserOrders(@PathVariable Integer id){
 		if(orderService.listOrder(id).isEmpty()){
-			return ResponseEntity.ok("Nenhum pedido");
+			return ResponseEntity.ok("Faça seu primeiro pedido!");
 		}else{
 			return ResponseEntity.ok(orderService.listOrder(id));
+		}
+
+	}
+
+	@GetMapping("/restaurant/{id}")
+	public ResponseEntity<?> listRestaurantOrders(@PathVariable Integer id){
+		if(orderService.listRestaurantOrder(id).isEmpty()){
+			return ResponseEntity.ok("Você ainda não tem pedidos :(");
+		}else{
+			return ResponseEntity.ok(orderService.listRestaurantOrder(id));
+		}
+
+	}
+	@GetMapping("/restaurant/report/{id}")
+	public ResponseEntity<?> listInformations(@PathVariable Integer id){
+		if(orderService.informationsRestaurant(id).isEmpty()){
+			return ResponseEntity.ok("Você ainda não tem pedidos :(");
+		}else{
+			return ResponseEntity.ok(orderService.informationsRestaurant(id));
 		}
 
 	}

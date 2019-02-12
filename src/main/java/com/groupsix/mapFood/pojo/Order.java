@@ -1,5 +1,7 @@
 package com.groupsix.mapFood.pojo;
 
+import com.groupsix.mapFood.entity.OrderItemEntity;
+
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -54,4 +56,6 @@ public class Order {
 	public void setOrderItems(List<OrderItem> orderItems) {
 		this.orderItems = orderItems;
 	}
+
+
 }
