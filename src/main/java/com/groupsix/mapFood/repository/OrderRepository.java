@@ -19,8 +19,14 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
     List<OrderEntity> findByCustomer_Id(Integer id);
 
     List<OrderEntity> findByRestaurant_Id(Integer id);
-    @Query(value = "SELECT DISTINCT(customer_id) FROM orders where restaurant_id = '%id%'", nativeQuery = true)
-    List<OrderEntity> countAllCustomer(Integer id);
+
+    @Query(value = "SELECT COUNT(DISTINCT(customer_id)) FROM orders where restaurant_id = ?1", nativeQuery = true)
+    int countAllCustomer(Integer id);
+
+    @Query(value = "SELECT SUM(total) FROM orders where restaurant_id = ?1", nativeQuery = true)
+    int countTotalRevenue(Integer id);
+
+
 
 
 }

@@ -116,12 +116,17 @@ public class OrderService {
 	}
 
 	public Map<String, String> informationsRestaurant(Integer id){
-		int numeroPedidos = (int) StreamSupport.stream(orderRepository.findByRestaurant_Id(id).spliterator(), false).count();
-		int numeroUsuarios = (int) StreamSupport.stream(orderRepository.countAllCustomer(id).spliterator(), false).count();
+		int totalOrders = (int) StreamSupport.stream(orderRepository.findByRestaurant_Id(id).spliterator(), false).count();
+		int totalUsers = orderRepository.countAllCustomer(id);
+		int totalRevenue = orderRepository.countTotalRevenue(id);
 		HashMap<String, String> map = new HashMap<>();
-		map.put("numero_pedidos", String.valueOf(numeroPedidos));
-		map.put("numero_clientes", String.valueOf(numeroUsuarios));
-		map.put("faturamento", "bb");
+
+		map.put("numero_pedidos", String.valueOf(totalOrders));
+		map.put("numero_clientes", String.valueOf(totalUsers));
+		map.put("faturamento", String.valueOf(totalRevenue));
+
+
+
 		return map;
 
 	}
