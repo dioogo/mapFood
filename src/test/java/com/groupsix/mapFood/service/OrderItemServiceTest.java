@@ -55,7 +55,7 @@ public class OrderItemServiceTest {
 		final OrderItemEntity orderItemEntity2 = new OrderItemEntity();
 		when(orderItemFactory.fromDTO(item2, product2)).thenReturn(orderItemEntity2);
 		
-		final List<OrderItemEntity> orderItemsEntities = service.getOrderItems(orderItems, null);
+		final List<OrderItemEntity> orderItemsEntities = service.getOrderItems(orderItems);
 		
 		assertEquals(2, orderItemsEntities.size());
 		assertEquals(orderItemEntity1, orderItemsEntities.get(0));

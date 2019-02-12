@@ -5,10 +5,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
-@Entity(name = "orders")
-
 @Table(name= "orders")
-
+@Entity(name = "orders")
 public class OrderEntity {
 
 	@Id

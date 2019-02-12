@@ -44,7 +44,7 @@ CREATE TABLE `mapfood`.`order_item` (
     REFERENCES `mapfood`.`product` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
-    
+
 CREATE TABLE `mapfood`.`order_delivery` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `order_id` INT NOT NULL,

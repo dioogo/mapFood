@@ -50,13 +50,4 @@ public class OrderController {
 		}
 
 	}
-	@GetMapping("/restaurant/report/{id}")
-	public ResponseEntity<?> listInformations(@PathVariable Integer id){
-		if(orderService.informationsRestaurant(id).isEmpty()){
-			return ResponseEntity.ok("Você ainda não tem pedidos :(");
-		}else{
-			return ResponseEntity.ok(orderService.informationsRestaurant(id));
-		}
-
-	}
 }
